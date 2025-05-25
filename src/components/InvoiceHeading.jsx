@@ -18,7 +18,7 @@ const InvoiceHeading = () => {
 const menus=['Cylinder gas', 'Tank gas', 'Domid gas I', 'Domid gas II', 'Accessories'];
 
  const dataStyle = {
-  fontSize: '1.2rem',
+  fontSize: '1rem',
 color:'#333',
   fontWeight: 'bold',}
   return (
@@ -48,7 +48,9 @@ color:'#333',
       </Box>  
         
         <AccessoryInvoice />
-    
+        <Paper>
+          hello
+          </Paper>
         </div>
     
   )

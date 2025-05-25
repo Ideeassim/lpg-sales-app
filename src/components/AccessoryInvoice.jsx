@@ -4,6 +4,10 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Paper } from '@mui/material';
+import InvoiceTable from './InvoiceTable';
+import PracticeInv from './PracticeInv';
+import Typography from '@mui/material/Typography';
+import { Box } from '@mui/system';
 
 
 const AccessoryInvoice = () => {
@@ -25,13 +29,18 @@ const menus=['standard regulator','standard valve','cast seater','hose'];
             onChange={handleChange}
           >
               <MenuItem value="">
-            <em>Accessory</em>
+            <em>Select</em>
           </MenuItem>
             {menus.map((menu, index) => (
               <MenuItem key={index} value={menu}>{menu}</MenuItem>
             ))}
           </Select>
         </FormControl>
+        <PracticeInv account={account}/>
+        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '10px', textAlign: 'center' }}>
+        
+        </Paper>
+        {/* <InvoiceTable/> */}
     </Paper>
   )
 }
