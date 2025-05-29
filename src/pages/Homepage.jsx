@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 const Homepage = () => {
   const [salesLedger, setSalesLedger] = useState(false);
   const [expenseLedger, setExpenseLedger] = useState(false);
+const [accessory, setAccessory] = useState('');
+
   const navigate = useNavigate();
 
   const handleSubmit = () => {
@@ -38,7 +40,7 @@ const ledgerStyle = {
 };
 
 return (
-    <div className="h-dvh w-dvw bg-gray-100">
+    <div className="min-h-full h-screen w-dvw bg-gray-100 pb-5">
         <nav className="h-16 bg-gray-800 flex items-center p-3">
             <div className="flex gap-10 items-center text-amber-500 w-full">
                 {ledgers.map((ledger, index) => (

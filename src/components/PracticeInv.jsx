@@ -6,31 +6,28 @@ import {
 } from '@mui/material';
 
 
-const PracticeInv = ({account}) => {
-const[rows, setRows]=useState([{
-    item: account,
-    quantity: '',
-    price: '',
-    total: 0
-}]);
+const PracticeInv = ({accessory, rows, setRows, setAddBtn, setReceiptRows, receiptRows}) => {
+
  
 function handleChange(index, event) {
-    const updatedRows = [...rows];
-
-    const { name, value } = event.target;
-    updatedRows[index][name] = value;
- const quantity= parseFloat(updatedRows[index].quantity) || 0;
- const price= parseFloat(updatedRows[index].price) || 0;
-
- updatedRows[index].total = quantity * price;
-    // Update the total for the current row
-
-    setRows(updatedRows);
+    const {name, value} = event.target;
+   setRows((prev) => ([{...prev, [name]:value}]));
     
 }
-//   const addRow = () => {
-//     setRows([...rows, { item: '', quantity: '', price: '', total: 0 }]);
-//   };
+
+ function handleClick() {
+  console.log(rows);
+  // if (rows[0].quantity.trim() === '' || rows[0].price.trim() === '') {
+    
+  //    setReceiptRows((prevRows) => [...prevRows, rows]);
+  // }
+ 
+  // setAddBtn(true);
+ 
+  // setRows([{ item: "", quantity: '', price: '', total: 0 }]);
+  // console.log(receiptRows);
+  
+ }
 
 
   return (
@@ -48,13 +45,13 @@ function handleChange(index, event) {
           
             {/* Rows will be dynamically generated here */}
             {rows.map((x,index) =>{
-                return <TableBody>
+                return <TableBody key={index}>
                                 <TableRow key={index}>
                                  <TableCell>
-                                    <TextField id="outlined-basic" value={account} variant="outlined" disabled name='item'/>
+                                    <TextField id="outlined-basic" value={accessory} variant="outlined" disabled name='item'/>
                                 </TableCell>
                                  <TableCell>
-                                    <TextField id="outlined-basic" onChange={(e)=>handleChange(index, e)} variant="outlined" value={x.quantity} name='quantity' />
+                                    <TextField id="outlined-basic" type="number" onChange={(e)=>handleChange(index, e)} variant="outlined" value={x.quantity} name='quantity' />
                                 </TableCell>
                                  <TableCell>
                                     <TextField id="outlined-basic"  onChange={(e)=>handleChange(index, e)} variant="outlined" value={x.price} name='price'/>
@@ -69,8 +66,8 @@ function handleChange(index, event) {
             })}
          
         </Table>
-          <Box mt={2}>
-        <Button variant="contained">
+          <Box m={2}>
+        <Button variant="contained" onClick={handleClick}>
             + Add Item
         </Button>
       </Box>
