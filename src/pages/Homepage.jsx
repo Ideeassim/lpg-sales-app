@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import InvoiceHeading from '../components/InvoiceHeading';
+import AccessoryInvoice from '../components/AccessoryInvoice';
+import CylinderInvoice from '../components/CylinderInvoice';
 import { Box, Button } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
@@ -72,7 +73,7 @@ return (
         </nav>
 
         <Box>
-           {salesLedger && <InvoiceHeading />} 
+           {salesLedger && <CylinderInvoice />} 
         </Box>
     </div>
 );
