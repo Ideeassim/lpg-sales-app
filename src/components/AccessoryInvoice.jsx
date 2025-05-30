@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 
-const InvoiceHeading = () => {
+const InvoiceHeading = ({heading}) => {
     const [accessory, setAccessory] = useState('');
   const [input, setInput] = useState({
     item: accessory,
@@ -59,6 +59,8 @@ const InvoiceHeading = () => {
      }
   return (
     <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', height: '110vh' }}>
+      
+       <Typography variant='h5' sx={heading}>Accessory Invoice</Typography>
       <Typography>Invoice no:</Typography>
       <Typography>Invoice date:</Typography>
       {/* //Select accessory */}
