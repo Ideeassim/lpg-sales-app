@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AccessoryInvoice from '../components/AccessoryInvoice';
 import CylinderInvoice from '../components/CylinderInvoice';
 import DomidInvoice from '../components/DomidInvoice';
 import Domid2Invoice from '../components/Domid2Invoice';
+import Ledger from '../components/Ledger';
 import { Box, Button, Typography } from '@mui/material';
 import TankGas from '../components/TankGas';
-import Home from '../components/Home';
 import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,9 +15,9 @@ import MenuItem from '@mui/material/MenuItem';
 const Homepage = () => {
    const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [salesLedger, setSalesLedger] = useState(false);
-  const [expenseLedger, setExpenseLedger] = useState(false);
-const [accessory, setAccessory] = useState('');
+  
+  const [Ledgers, setLedger]=useState(false);
+
 const[displayComp, setDisplay]= useState('home')
 
   const navigate = useNavigate();
@@ -26,20 +26,63 @@ const[displayComp, setDisplay]= useState('home')
     navigate('/');
   };
 
+// accessory state
+    const [rows, setRows] = useState([]);
+     const [grandTotal, setGrandTotal]= useState(0);
+      
+ const today = new Date();
+const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+
+   
+  
+    //TRANSFER TO LEDGER:
+      const [info, setInfo]=useState({
+        invoiceNo:'',
+        invoiceDate: formattedDate,
+        Account: '',
+        Amount: ''
+    })
+
+    useEffect(()=>setInfo(prev =>({...prev, Amount: grandTotal})), [grandTotal])
+    const [storeData, setStoreData]=useState([])
+       
+    //calculate ledger total        
+     const [ledgerTotal, setLedgerTotal]= useState(0);
+   
+
+
+    function handleDataSave() {
+      if (info.invoiceNo) {
+      
+        
+        setStoreData((prev) =>[...prev, info])
+      }
+      if (info.Amount) {
+        setLedgerTotal(ledgerTotal+info.Amount);
+      }
+      
+    }
+    
+   function handleAccSave() {
+        
+       setDisplay('home')
+       handleDataSave ()
+      setRows([]);
+    } 
+
+
+
 const handleLedgerClick = (event) => {
     const ledger = event.target.innerText.trim();
   if (ledger === 'Sales') {
-    setSalesLedger(true);
-        setExpenseLedger(false);
+  
          setAnchorEl(event.currentTarget);
+          
 
-
-  } else if (ledger === 'Expense') {
-    setExpenseLedger(true);
-    setSalesLedger(false);
-  } else {
-    setSalesLedger(false);
-    setExpenseLedger(false);
+ } else if(ledger === 'Ledger') {
+    setLedger(true)
+ 
+    setDisplay('Ledgers')
   }
 }
 
@@ -48,6 +91,8 @@ const handleClose = (event) => {
     const item = event.target.innerText.trim();
    if (item === 'Accessories invoice') {
     setDisplay('Accessories')
+    setInfo((prev) =>{ const updatedInfo={...prev, invoiceNo: (Math.floor(Math.random()*1000)), Account:'Accessories'};
+      return {...updatedInfo}})
    }else if (item ==='Domid Gas I invoice') {
      setDisplay('Domid Gas I')
    }else if (item === 'Domid Gas II invoice') {
@@ -56,10 +101,14 @@ const handleClose = (event) => {
     setDisplay( 'Cylinder Gas')
    }else if (item === 'Tank Gas invoice') {
     setDisplay('Tank Gas')
-   }else{setDisplay('home')}
+   }
+   else if (Ledgers) { setDisplay('Ledgers')
+    
+   }
+   else{setDisplay('home')}
   };
 
-const ledgers = ['Sales ', 'Expense', 'Domid Ledger'];
+const ledgers = ['Sales ', 'Expense', 'Ledger'];
 const ledgerStyle = {
   fontSize: '1.5rem',
   color: 'orange',
@@ -71,6 +120,11 @@ const heading ={
         color: '#F97A00'
     };
 const Invoices=['Accessories','Domid Gas I', 'Domid Gas II', 'Cylinder Gas', 'Tank Gas']
+
+
+
+   
+    
 return (
     <div className="min-h-full h-screen w-dvw bg-gray-100 pb-5 ">
         <nav className="h-16 bg-gray-800 flex items-center p-3">
@@ -118,11 +172,12 @@ return (
 
         <Box sx={{display:'flex', direction:'column', justifyContent:'center', alignItems:'center', padding:'40px'}}>
            {displayComp === 'home' && <Typography variant='h5'>it all starts here</Typography>}
-           {displayComp === 'Accessories' && <AccessoryInvoice heading={heading}/>}
+           {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}/>}
            {displayComp === 'Domid Gas I' && <DomidInvoice  heading={heading}/>}
            {displayComp === 'Domid Gas II' && <Domid2Invoice  heading={heading}/>}
            {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading}/>}
            {displayComp === 'Tank Gas' && <TankGas  heading={heading}/>}
+           {displayComp === 'Ledgers' && <Ledger ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} />}
         </Box>
     </div>
 );

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -11,7 +10,7 @@ import {
 } from '@mui/material';
 
 
-const InvoiceHeading = ({heading}) => {
+const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handleAccSave, date,info, handleDataSave}) => {
     const [accessory, setAccessory] = useState('');
   const [input, setInput] = useState({
     item: accessory,
@@ -20,10 +19,12 @@ const InvoiceHeading = ({heading}) => {
     total: '' // This will be calculated
   });
 
-  const [rows, setRows] = useState([]);
-  const [grandTotal, setGrandTotal]= useState(0);
+ 
+ 
+  
 
- useEffect(() =>{ const grandTotal =rows.reduce((acc, item) => acc + parseFloat(item.total || 0 ), 0);
+ useEffect(() =>{
+   const grandTotal =rows.reduce((acc, item) => acc + parseFloat(item.total || 0 ), 0);
       setGrandTotal(grandTotal)}, [rows]);
      
   const handleChange = (event) => {
@@ -48,21 +49,22 @@ const InvoiceHeading = ({heading}) => {
     });   
     
   } 
-  
+   const AccessoryList=["Standard Regulator (HP)", "Standar Regulator(LP)", "Standard Valve", "Camping Valve", "Hose", "Cast seater 3kg", "Cast seater 6kg", "Hose Clip","Control 3kg", "Control 6kg", "Stainless steel burner"]
+
+
     function addItem() {
       const {item, quantity, price,total}=input;
       
       const receiptStore ={item, quantity, price,total}; //transfer data  from input to receiptStore
-    setRows((prev) =>[...prev, receiptStore])
-      console.log(rows);
-     
+    setRows((prev) =>[...prev, receiptStore]);        
      }
+ 
   return (
-    <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', height: '110vh' }}>
+    <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', minHeight: '110vh' }}>
       
        <Typography variant='h5' sx={heading}>Accessory Invoice</Typography>
-      <Typography>Invoice no:</Typography>
-      <Typography>Invoice date:</Typography>
+      <Typography>Invoice no:{info.invoiceNo}</Typography>
+      <Typography>Invoice date:{date}</Typography>
       {/* //Select accessory */}
       <FormControl  sx={{ marginTop: '20px' }}>
         <InputLabel id="accessory-select-label">Accessory</InputLabel>
@@ -73,9 +75,9 @@ const InvoiceHeading = ({heading}) => {
           label="Accessory"
           onChange={handleChange}
         >
-          <MenuItem value='access1'>Accessory 1</MenuItem>
-          <MenuItem value='access2'>Accessory 2</MenuItem>
-          <MenuItem value='access3'>Accessory 3</MenuItem>
+          {AccessoryList.map((item,index) =>{ return <MenuItem value={item} key={index}>{item}</MenuItem>})}
+          
+          
         </Select>
         <FormHelperText>Select an accessory</FormHelperText>
       </FormControl>
@@ -83,7 +85,6 @@ const InvoiceHeading = ({heading}) => {
       {/* TABLE */}
       <TableContainer sx={{ marginTop: '20px' }}>
         <Table>
-
           <TableHead>
             <TableRow>
               <TableCell>Item</TableCell>
@@ -155,6 +156,7 @@ const InvoiceHeading = ({heading}) => {
           
         </Table>
       </TableContainer>
+      <Button variant='contained' onClick={handleAccSave}>Save</Button>
       </Paper>
     </Paper>
   )
