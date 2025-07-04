@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
+import Receipts from '../components/Receipts';
+import StoredReceipts from '../components/StoredReceipts';
+
 
 
 const Homepage = () => {
@@ -29,6 +32,8 @@ const[displayComp, setDisplay]= useState('home')
 // accessory state
     const [rows, setRows] = useState([]);
      const [grandTotal, setGrandTotal]= useState(0);
+     const [storedReceipts, setStoredReceipts]=useState([]);
+     const [cancelledR, setCancelledR]= useState([]);
       
  const today = new Date();
 const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
@@ -41,9 +46,11 @@ const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFul
         invoiceDate: formattedDate,
         Account: '',
         Amount: ''
+       
     })
 
     useEffect(()=>setInfo(prev =>({...prev, Amount: grandTotal})), [grandTotal])
+    
     const [storeData, setStoreData]=useState([])
        
     //calculate ledger total        
@@ -52,11 +59,11 @@ const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFul
 
 
     function handleDataSave() {
-      if (info.invoiceNo) {
+      if (info.invoiceNo && rows.length>0) {
       
         
         setStoreData((prev) =>[...prev, info])
-      }
+      }else {alert('Please enter receipt'), setDisplay('Accessories')}
       if (info.Amount) {
         setLedgerTotal(ledgerTotal+info.Amount);
       }
@@ -64,12 +71,19 @@ const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFul
     }
     
    function handleAccSave() {
-        
+               
        setDisplay('home')
        handleDataSave ()
+      
+       setStoredReceipts(prev => [...prev, rows]);
+      
+     ;
+       
       setRows([]);
     } 
 
+  
+    
 
 
 const handleLedgerClick = (event) => {
@@ -83,6 +97,8 @@ const handleLedgerClick = (event) => {
     setLedger(true)
  
     setDisplay('Ledgers')
+  }else if(ledger === 'Receipts'){
+    setDisplay('Receipts')
   }
 }
 
@@ -108,7 +124,7 @@ const handleClose = (event) => {
    else{setDisplay('home')}
   };
 
-const ledgers = ['Sales ', 'Expense', 'Ledger'];
+const ledgers = ['Sales ', 'Expense','Receipts', 'Ledger'];
 const ledgerStyle = {
   fontSize: '1.5rem',
   color: 'orange',
@@ -121,9 +137,46 @@ const heading ={
     };
 const Invoices=['Accessories','Domid Gas I', 'Domid Gas II', 'Cylinder Gas', 'Tank Gas']
 
+ function indexCheck(indexToRemove) {
+
+  setRows(prevValue => {
+      
+    return prevValue.filter((_, i) =>i !== indexToRemove)});
+ 
+}
 
 
-   
+
+function deleteItem(itemToRemove) {
+  const receiptToCancel = storedReceipts[itemToRemove];
+
+  // Remove it from storedReceipts
+  setStoredReceipts(prev =>
+    prev.filter((_, i) => i !== itemToRemove)
+  );
+
+  // Add to cancelledR
+  setCancelledR(prev =>
+    [...prev, receiptToCancel]);
+}
+
+function restoreItem(index) {
+  const itemToRestore= cancelledR[index];
+
+  //Add to storedReceipts
+  setStoredReceipts(prev => [...prev, itemToRestore]);
+
+  //remove from CancelledR
+  setCancelledR(prev =>{ 
+    return prev.filter((_,i) => i !==index)})
+}
+
+function removeLedgerItem(index) {
+  setStoreData(prev => {
+    return prev.filter((_,i) => i !==index )
+  })
+}
+
     
 return (
     <div className="min-h-full h-screen w-dvw bg-gray-100 pb-5 ">
@@ -169,15 +222,16 @@ return (
                     Log out
                 </Button>
         </nav>
-
+            {/* big display */}
         <Box sx={{display:'flex', direction:'column', justifyContent:'center', alignItems:'center', padding:'40px'}}>
            {displayComp === 'home' && <Typography variant='h5'>it all starts here</Typography>}
-           {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}/>}
+           {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}  indexCheck={indexCheck} setStoredReceipts={setStoredReceipts}/>}
            {displayComp === 'Domid Gas I' && <DomidInvoice  heading={heading}/>}
            {displayComp === 'Domid Gas II' && <Domid2Invoice  heading={heading}/>}
            {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading}/>}
            {displayComp === 'Tank Gas' && <TankGas  heading={heading}/>}
-           {displayComp === 'Ledgers' && <Ledger ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} />}
+           {displayComp === 'Ledgers' && <Ledger removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} />}
+            {displayComp ==='Receipts' && <StoredReceipts storeData={storeData} restoreItem={restoreItem} cancelledR={cancelledR} deleteItem={deleteItem} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts}/>}
         </Box>
     </div>
 );

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, } from '@mui/material';
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, } from '@mui/material';
 
 
 
 
-const Ledger = ({ledgerTotal, storeData}) => {
-      console.log(storeData);
-   
-
+const Ledger = ({ledgerTotal, storeData, removeLedgerItem}) => {
+    
+  const  totalAmount= storeData.reduce((acc, i) => acc + parseFloat(i.Amount || 0), 0);
+// const grandTotal =rows.reduce((acc, item) => acc + parseFloat(item.total || 0 ), 0);
     
   
   
@@ -39,13 +39,13 @@ const Ledger = ({ledgerTotal, storeData}) => {
                         <TableCell>{data.invoiceDate}</TableCell>
                         <TableCell>{data.Account}</TableCell>
                         <TableCell>{data.Amount}</TableCell>
-                  
+                        <TableCell><Button onClick={()=>{removeLedgerItem(index)}}>remove</Button></TableCell>
                     </TableRow>
                     })}
                    
                 </TableBody>
             </Table>
-       </TableContainer><p>Ledger Total:{ledgerTotal}</p>
+       </TableContainer><p>Ledger Total:{totalAmount}</p>
     </Paper>
   )
 }

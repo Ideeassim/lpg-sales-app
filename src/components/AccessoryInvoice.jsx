@@ -8,15 +8,19 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, TextField, Button, Typography, Box
 } from '@mui/material';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import Receipts from './Receipts';
 
-
-const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handleAccSave, date,info, handleDataSave}) => {
+const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handleAccSave, date,info,setInfo, indexCheck, setStoredReceipts}) => {
     const [accessory, setAccessory] = useState('');
+    const [btnState, setBtnState]=useState(false);
   const [input, setInput] = useState({
     item: accessory,
     quantity: '',
     price: '',
-    total: '' // This will be calculated
+    total: '',
+    invoiceNo: ''// This will be calculated
   });
 
  
@@ -30,7 +34,7 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
   const handleChange = (event) => {
     const value= event.target.value
     setAccessory(value);
-    setInput((prev)=>({...prev, item:value}))
+    setInput((prev)=>({...prev, item:value, invoiceNo: info.invoiceNo}))
   };
 
   // Track textfield changes
@@ -53,12 +57,34 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
 
 
     function addItem() {
-      const {item, quantity, price,total}=input;
+      const {item, quantity, price,total, invoiceNo}=input;
       
-      const receiptStore ={item, quantity, price,total}; //transfer data  from input to receiptStore
-    setRows((prev) =>[...prev, receiptStore]);        
+      const receiptStore ={item, quantity, price,total, invoiceNo}; //transfer data  from input to receiptStore
+
+      //validate fields
+      if (!item || !quantity || !price || !total) {
+        // setBtnState(false);
+         alert('Please enter all fields and select an accessory!')
+
+      }
+      //update Rows
+      if(item || quantity || price || total){
+                 setRows((prev) =>[...prev, receiptStore]);    
+                
+                 setInfo((prev) =>({...prev, item,quantity,total, invoiceNo}))
+                // setBtnState(true);
+      }
+
+         //reset Input
+          setInput( {item: '',
+          quantity: '',
+           price: '',
+           total: ''});
+            setAccessory('')
      }
- 
+//  function indexCheck(indexToRemove) {
+//   setRows(prevValue => prevValue.filter((_, i) =>i !== indexToRemove));
+// }
   return (
     <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', minHeight: '110vh' }}>
       
@@ -100,7 +126,7 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
               <TableCell>
                 <TextField variant="outlined"
                     size="small" value={input.item}
-                    fullWidth></TextField>
+                    fullWidth InputProps={{ readOnly: true }}></TextField>
               </TableCell>
               <TableCell>
                 <TextField variant="outlined" size="small" fullWidth type='number' name='quantity' value={input.quantity} onChange={handleInput}></TextField>
@@ -109,7 +135,7 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
                 <TextField  variant="outlined" size="small" fullWidth name='price' value={input.price} onChange={handleInput}></TextField>
                 </TableCell>
               <TableCell>
-                <TextField variant="outlined" size="small" fullWidth name='total' value={input.total} >{input.total}  onChange={handleInput}</TextField>
+                <TextField variant="outlined" size="small" fullWidth name='total' value={input.total}  InputProps={{ readOnly: true }}>{input.total}</TextField>
                 </TableCell>
             </TableRow>
             {/* More rows can be added similarly */}
@@ -118,46 +144,16 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
       </TableContainer>
 
       {/* add item */}
-      <Button onClick={addItem}>
+      {/* <Button onClick={addItem}>
         + Add Item
-      </Button>
+      </Button> */}
+      <Fab sx={{backgroundColor:'orange', color:'white', margin:'20px'}} aria-label="add" onClick={addItem} size='small'>
+        <AddIcon />
+      </Fab>
 
       {/* receipt */}
-      <Paper>
-        <Typography>
-          Receipt
-        </Typography>
-              <TableContainer sx={{ marginTop: '20px' }}>
-        <Table>
-
-          <TableHead>
-            <TableRow>
-              <TableCell>Item</TableCell>
-              <TableCell>Quantity</TableCell>
-              <TableCell>Price  (₦)</TableCell>
-              <TableCell>Total  (₦)</TableCell>
-            </TableRow>
-          </TableHead>
-
-          
-            <TableBody>
-           {rows.map((data,index) =>{
-            return <TableRow key={index}>
-           <TableCell>{data.item}</TableCell>
-           <TableCell>{data.price}</TableCell>
-           <TableCell>{data.quantity}</TableCell>
-           <TableCell>{data.total}</TableCell>
-            </TableRow>})}
-            {/* More rows can be added similarly */}
-            <TableRow>
-              <TableCell><em className='font-bold'>Grand Total: ₦</em>{grandTotal}</TableCell>
-            </TableRow>
-          </TableBody>
-          
-        </Table>
-      </TableContainer>
-      <Button variant='contained' onClick={handleAccSave}>Save</Button>
-      </Paper>
+      <Receipts rows={rows} indexCheck={indexCheck} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave}/>
+    
     </Paper>
   )
 }
