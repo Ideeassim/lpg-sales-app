@@ -14,7 +14,7 @@ import Receipts from './Receipts';
 
 const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handleAccSave, date,info,setInfo, indexCheck, setStoredReceipts}) => {
     const [accessory, setAccessory] = useState('');
-    const [btnState, setBtnState]=useState(false);
+    
   const [input, setInput] = useState({
     item: accessory,
     quantity: '',

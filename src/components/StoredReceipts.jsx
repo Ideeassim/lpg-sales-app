@@ -8,7 +8,7 @@ import CanceledR from './canceledR';
 const StoredReceipts = ({storedReceipts, heading, deleteItem, cancelledR, restoreItem, storeData={storeData}}) => {
     const[shown, setShown]=useState(true)
   return (
-    <Paper sx={{padding:'20px'}} >
+    <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', height: '110vh', width:'80%' }} >
         <Typography  variant='h6' sx={heading}>
           Receipt
         </Typography>

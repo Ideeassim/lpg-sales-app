@@ -110,7 +110,9 @@ const handleClose = (event) => {
     setInfo((prev) =>{ const updatedInfo={...prev, invoiceNo: (Math.floor(Math.random()*1000)), Account:'Accessories'};
       return {...updatedInfo}})
    }else if (item ==='Domid Gas I invoice') {
-     setDisplay('Domid Gas I')
+     setDisplay('Domid Gas I');
+      setInfo((prev) =>{ const updatedInfo={...prev, invoiceNo: (Math.floor(Math.random()*1000)), Account:'Domid 1'};
+      return {...updatedInfo}})
    }else if (item === 'Domid Gas II invoice') {
     setDisplay('Domid Gas II')
    }else if (item === 'Cylinder Gas invoice'){
@@ -226,7 +228,7 @@ return (
         <Box sx={{display:'flex', direction:'column', justifyContent:'center', alignItems:'center', padding:'40px'}}>
            {displayComp === 'home' && <Typography variant='h5'>it all starts here</Typography>}
            {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}  indexCheck={indexCheck} setStoredReceipts={setStoredReceipts}/>}
-           {displayComp === 'Domid Gas I' && <DomidInvoice  heading={heading}/>}
+           {displayComp === 'Domid Gas I' && <DomidInvoice  heading={heading} info={info} setInfo={setInfo} date={formattedDate} setStoreData={setStoreData}/>}
            {displayComp === 'Domid Gas II' && <Domid2Invoice  heading={heading}/>}
            {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading}/>}
            {displayComp === 'Tank Gas' && <TankGas  heading={heading}/>}
