@@ -34,6 +34,7 @@ const[displayComp, setDisplay]= useState('home')
      const [grandTotal, setGrandTotal]= useState(0);
      const [storedReceipts, setStoredReceipts]=useState([]);
      const [cancelledR, setCancelledR]= useState([]);
+     const [storedDom1R, setStoredDom1R]=useState([]);
       
  const today = new Date();
 const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
@@ -179,6 +180,12 @@ function removeLedgerItem(index) {
   })
 }
 
+//remove item in domid1 receipt
+function removeItem(index) {
+  setStoredDom1R(prev => {
+    return prev.filter((_,i) => i !==index)
+  })
+}
     
 return (
     <div className="min-h-full h-screen w-dvw bg-gray-100 pb-5 ">
@@ -228,12 +235,12 @@ return (
         <Box sx={{display:'flex', direction:'column', justifyContent:'center', alignItems:'center', padding:'40px'}}>
            {displayComp === 'home' && <Typography variant='h5'>it all starts here</Typography>}
            {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}  indexCheck={indexCheck} setStoredReceipts={setStoredReceipts}/>}
-           {displayComp === 'Domid Gas I' && <DomidInvoice  heading={heading} info={info} setInfo={setInfo} date={formattedDate} setStoreData={setStoreData}/>}
+           {displayComp === 'Domid Gas I' && <DomidInvoice setStoredDom1R={setStoredDom1R} setDisplay={setDisplay} heading={heading} info={info} setInfo={setInfo} date={formattedDate} setStoreData={setStoreData}/>}
            {displayComp === 'Domid Gas II' && <Domid2Invoice  heading={heading}/>}
            {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading}/>}
            {displayComp === 'Tank Gas' && <TankGas  heading={heading}/>}
            {displayComp === 'Ledgers' && <Ledger removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} />}
-            {displayComp ==='Receipts' && <StoredReceipts storeData={storeData} restoreItem={restoreItem} cancelledR={cancelledR} deleteItem={deleteItem} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts}/>}
+            {displayComp ==='Receipts' && <StoredReceipts removeItem={removeItem} storedDom1R={storedDom1R} storeData={storeData} restoreItem={restoreItem} cancelledR={cancelledR} deleteItem={deleteItem} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts}/>}
         </Box>
     </div>
 );

@@ -4,7 +4,7 @@ import {
   Paper, TextField, Button, Typography, Box
 } from '@mui/material';
 
-const DomidInvoice = ({heading, info,date, setStoreData, setInfo}) => {
+const DomidInvoice = ({heading, info,date, setStoreData, setInfo, setDisplay,setStoredDom1R}) => {
 
   //state for input fields
   const[domidInput, setDomidInput]= useState({
@@ -42,6 +42,9 @@ const DomidInvoice = ({heading, info,date, setStoreData, setInfo}) => {
     //transfer to ledger
     setStoreData(prev => [...prev, info]);
 
+    //transfer to storedReceipts
+    setStoredDom1R(prev => [...prev, domidInput])
+
     //reset input
     setDomidInput({
     totalKg:'',
@@ -51,7 +54,8 @@ const DomidInvoice = ({heading, info,date, setStoreData, setInfo}) => {
     purchaseAmount:'',
     cashGiven:'',
     profit:''
-    })
+    });
+    setDisplay('home')
   }
   return (
      <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', height: '60vh', width:'60vw' }}>
@@ -60,19 +64,19 @@ const DomidInvoice = ({heading, info,date, setStoreData, setInfo}) => {
       <Typography>Invoice no: {info.invoiceNo}</Typography>
       <Typography>Invoice date:{date}</Typography>
       <Box sx={{display:'flex', gap:'20px', marginTop:'20px'}}>
-        <TextField label='Total Kg' name='totalKg' size='small' onChange={handleInput} value={domidInput.totalKg}/>
+        <TextField label='Total Kg' name='totalKg' size='small' type='number' onChange={handleInput} value={domidInput.totalKg}/>
         <TextField label='No of bottles' size='small' name='noOfBots' value={domidInput.noOfBots}/>
       </Box>
       <Box sx={{display:'flex', gap:'20px', marginTop:'20px'}}>
-        <TextField label='Unit Price' name='unitPrice' size='small' variant='outlined'  onChange={handleInput} value={domidInput.unitPrice}/>
-        <TextField label='End User Price' name='endUserPrice' size='small' variant='outlined'  onChange={handleInput} value={domidInput.endUserPrice}/>
+        <TextField label='Unit Price' name='unitPrice' size='small' variant='outlined' type='number'  onChange={handleInput} value={domidInput.unitPrice}/>
+        <TextField label='End User Price' name='endUserPrice' size='small' type='number' variant='outlined'  onChange={handleInput} value={domidInput.endUserPrice}/>
       </Box>
       <Box sx={{display:'flex', gap:'20px', marginTop:'20px'}}>
-         <TextField label='Cash Given' name='cashGiven' size='small' variant='outlined' onChange={handleInput} value={domidInput.cashGiven}/>
-       <TextField label='Purchase Amount' name='purchaseAmount' size='small' variant='outlined'  onChange={handleInput} value={domidInput.purchaseAmount}/></Box>
+         <TextField label='Cash Given' name='cashGiven' type='number' size='small' variant='outlined' onChange={handleInput} value={domidInput.cashGiven}/>
+       <TextField label='Purchase Amount' name='purchaseAmount' type='number' size='small' variant='outlined'  onChange={handleInput} value={domidInput.purchaseAmount}/>
       
-      <TextField  label='Profit' name='profit' value={domidInput.profit} size='small' variant='outlined' onChange={handleInput} />
-      <Button variant='contained' onClick={handleDomidSave}>Save</Button>
+      <TextField  label='Profit' name='profit' value={domidInput.profit} size='small' variant='outlined' onChange={handleInput} /> </Box>
+      <Button variant='contained' onClick={handleDomidSave} sx={{marginTop:'20px'}}>Save</Button>
       </Paper>
   )
 }
