@@ -1,17 +1,28 @@
 import React, { useState } from 'react'
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button, TextField } from '@mui/material';
+import { Paper, Box,Typography,Button, TextField } from '@mui/material';
 import CanceledR from './canceledR';
 
 
 
 
-const StoredReceipts = ({storedReceipts, heading, deleteItem, cancelledR, restoreItem, storeData,storedDom1R, removeItem}) => {
+const StoredReceipts = ({storedReceipts, heading, deleteItem, cancelledR, restoreItem,storedDom2R  ,storedDom1R, removeItem}) => {
+const[show, setShow]=useState(false);
 
   return (
     <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', height: '110vh', width:'80%' }} >
-        <Typography  variant='h6' sx={heading}>
-          Receipt
-        </Typography>
+        
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography  variant='h6' sx={heading}>
+                  Receipts
+            </Typography>
+            <Button href='#' onClick={()=>setShow(true) } sx={{justifySelf:'flex-end', color:'#393E46'}}>
+                 view cancelled receipts
+             </Button>
+        </Box>
+
+        {/* main box */}
+         <Box>
+          <hr style={{color:'#B6B09F'}}/>
           {storedReceipts.map((eachArray, index)=>{ 
         return <Paper key={index} sx={{margin: '20px'}}>
             {eachArray.map((data, i) => {
@@ -25,14 +36,8 @@ const StoredReceipts = ({storedReceipts, heading, deleteItem, cancelledR, restor
                         </div>
             })} <Button onClick={()=>deleteItem(index)}>remove</Button>   
         </Paper>})}
-        <a href='#' onClick={()=>setShown(false) }>
-        view cancelled receipts
-        </a>
-        <Paper>
-            <CanceledR cancelledR={cancelledR} restoreItem={restoreItem}/>
-        </Paper>
 
-        {/* domid1 receipts */}
+         {/* domid1 receipts */}
         {storedDom1R.map((item,index) => {
           return <Paper key={index} sx={{fontWeight:'400', margin:'20px'}}>
             <p>Total Kg: {item.totalKg}</p>
@@ -45,6 +50,27 @@ const StoredReceipts = ({storedReceipts, heading, deleteItem, cancelledR, restor
             <Button onClick={()=>removeItem(index)}>remove</Button>
           </Paper>
         })}
+
+        {/* domid2 receipts */}
+        {storedDom2R.map((item,index)=>{
+          return <Paper key={index} >
+                <p>Customer Name: {item.customerName}</p>                                      
+                <p>Total Kg: {item.totalKg}</p>                                      
+                <p>Cost Price: {item.costPrice}</p>                                      
+                <p>End User Price: {item.endUserPrice}</p>                                      
+                <p>profit: {item.profit}</p>     
+                <Button onClick={()=>removeItem(index)}>remove</Button>                                 
+          </Paper>
+        })}
+          </Box> 
+        
+        {/* cancelled receipts */}
+        {show && <Box>
+              <Paper  sx={{ padding: '20px', margin: '20px', backgroundColor: 'white', height: '90vh', width:'60vw' }}>
+                  <CanceledR cancelledR={cancelledR} restoreItem={restoreItem} heading={heading}/>
+              </Paper>
+        </Box>}
+       
       </Paper>
   )
 }

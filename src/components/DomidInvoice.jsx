@@ -58,7 +58,7 @@ const DomidInvoice = ({heading, info,date, setStoreData, setInfo, setDisplay,set
     setDisplay('home')
   }
   return (
-     <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', height: '60vh', width:'60vw' }}>
+     <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: 'white', height: '60vh', width:'60vw' }}>
       
        <Typography variant='h5' sx={heading}>Domid Gas I Invoice</Typography>
       <Typography>Invoice no: {info.invoiceNo}</Typography>

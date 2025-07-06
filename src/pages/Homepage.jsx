@@ -32,10 +32,12 @@ const[displayComp, setDisplay]= useState('home')
 // accessory state
     const [rows, setRows] = useState([]);
      const [grandTotal, setGrandTotal]= useState(0);
-     const [storedReceipts, setStoredReceipts]=useState([]);
+     const [storedReceipts, setStoredReceipts]=useState([]); //accessories receipts
      const [cancelledR, setCancelledR]= useState([]);
-     const [storedDom1R, setStoredDom1R]=useState([]);
-      
+     const [storedDom1R, setStoredDom1R]=useState([]); //domid1 receipts
+     const[storedDom2R, setStoredDom2R]=useState([]); //domid2 receipts
+     
+     
  const today = new Date();
 const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
 
@@ -112,10 +114,12 @@ const handleClose = (event) => {
       return {...updatedInfo}})
    }else if (item ==='Domid Gas I invoice') {
      setDisplay('Domid Gas I');
-      setInfo((prev) =>{ const updatedInfo={...prev, invoiceNo: (Math.floor(Math.random()*1000)), Account:'Domid 1'};
+      setInfo((prev) =>{ const updatedInfo={...prev, invoiceNo: (Math.floor(Math.random()*1000)), Account:'Domid I'};
       return {...updatedInfo}})
    }else if (item === 'Domid Gas II invoice') {
-    setDisplay('Domid Gas II')
+    setDisplay('Domid Gas II');
+    setInfo((prev) =>{ const updatedInfo={...prev, invoiceNo: (Math.floor(Math.random()*1000)), Account:'Domid II'};
+      return {...updatedInfo}})
    }else if (item === 'Cylinder Gas invoice'){
     setDisplay( 'Cylinder Gas')
    }else if (item === 'Tank Gas invoice') {
@@ -136,7 +140,7 @@ const ledgerStyle = {
 };
 const heading ={
         textAlign: 'center',
-        color: '#F97A00'
+        color: '#2A4759'
     };
 const Invoices=['Accessories','Domid Gas I', 'Domid Gas II', 'Cylinder Gas', 'Tank Gas']
 
@@ -183,6 +187,12 @@ function removeLedgerItem(index) {
 //remove item in domid1 receipt
 function removeItem(index) {
   setStoredDom1R(prev => {
+    return prev.filter((_,i) => i !==index)
+  })
+}
+//remove item in domid2 receipt
+function removeItem(index) {
+  setStoredDom2R(prev => {
     return prev.filter((_,i) => i !==index)
   })
 }
@@ -236,11 +246,11 @@ return (
            {displayComp === 'home' && <Typography variant='h5'>it all starts here</Typography>}
            {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}  indexCheck={indexCheck} setStoredReceipts={setStoredReceipts}/>}
            {displayComp === 'Domid Gas I' && <DomidInvoice setStoredDom1R={setStoredDom1R} setDisplay={setDisplay} heading={heading} info={info} setInfo={setInfo} date={formattedDate} setStoreData={setStoreData}/>}
-           {displayComp === 'Domid Gas II' && <Domid2Invoice  heading={heading}/>}
+           {displayComp === 'Domid Gas II' && <Domid2Invoice setInfo={setInfo} setStoreData={setStoreData} setDisplay={setDisplay} info={info} setStoredDom2R={setStoredDom2R}  heading={heading} date={formattedDate}/>}
            {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading}/>}
            {displayComp === 'Tank Gas' && <TankGas  heading={heading}/>}
            {displayComp === 'Ledgers' && <Ledger removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} />}
-            {displayComp ==='Receipts' && <StoredReceipts removeItem={removeItem} storedDom1R={storedDom1R} storeData={storeData} restoreItem={restoreItem} cancelledR={cancelledR} deleteItem={deleteItem} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts}/>}
+            {displayComp ==='Receipts' && <StoredReceipts removeItem={removeItem} storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} cancelledR={cancelledR} deleteItem={deleteItem} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts}/>}
         </Box>
     </div>
 );
