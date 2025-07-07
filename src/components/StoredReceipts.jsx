@@ -5,26 +5,46 @@ import CanceledR from './canceledR';
 
 
 
-const StoredReceipts = ({storedReceipts, heading, deleteItem, cancelledR, restoreItem,storedDom2R  ,storedDom1R, removeItem}) => {
+const StoredReceipts = ({storedReceipts, heading, deleteItem, cancelledR, cancelledD2,cancelledD1,deleteD1R, deleteD2R, restoreItem, restoreD1item, restoreD2item, storedDom2R  ,storedDom1R, removeItem}) => {
 const[show, setShow]=useState(false);
+const receiptStyle ={
+  padding: '20px',
+  color: '#393E46',
+  margin:'20px',
+  fontSize:'1.1rem'
+}
+
+             
+
+ const fields=[
+  {key: 'Date', label:'date'},
+  {key: 'Invoice No', label:'invoiceNo'},
+  {key: 'Total Kg', label:'totalKg'},
+  {key: 'No of Bottles', label:'noOfBots'},
+  {key: 'Unit Price', label:'unitPrice'},
+  {key: 'End User Price', label:'endUserPrice'},
+  {key: 'Purchase Amount', label:'purchaseAmount'},
+  {key: 'Cash Given', label:'cashGiven'},
+  {key: 'Profit', label:'profit'}
+ ]
 
   return (
     <Paper elevation={4} sx={{ padding: '20px', margin: '20px', backgroundColor: '#f5f5f5', height: '110vh', width:'80%' }} >
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography  variant='h6' sx={heading}>
+            <Button  variant='h6' sx={{color:'#FF7601', fontSize:'1.3rem'}} onClick={()=>setShow(false) } >
                   Receipts
-            </Typography>
+            </Button>
             <Button href='#' onClick={()=>setShow(true) } sx={{justifySelf:'flex-end', color:'#393E46'}}>
                  view cancelled receipts
              </Button>
         </Box>
 
         {/* main box */}
-         <Box>
-          <hr style={{color:'#B6B09F'}}/>
-          {storedReceipts.map((eachArray, index)=>{ 
-        return <Paper key={index} sx={{margin: '20px'}}>
+       { !show && <Box>
+          <hr style={{color:'#DDDDDD'}}/>
+          { storedReceipts.map((eachArray, index)=>{ 
+        return <Paper key={index} sx={receiptStyle}>
             {eachArray.map((data, i) => {
                 return <div key={i}>
                   <div>
@@ -39,35 +59,31 @@ const[show, setShow]=useState(false);
 
          {/* domid1 receipts */}
         {storedDom1R.map((item,index) => {
-          return <Paper key={index} sx={{fontWeight:'400', margin:'20px'}}>
-            <p>Total Kg: {item.totalKg}</p>
-            <p>No of Bottles: {item.noOfBots}</p>
-            <p>Unit Price: {item. unitPrice}</p>
-            <p>End User Price: {item.endUserPrice}</p>
-            <p>Purchase Amount: {item.purchaseAmount}</p>
-            <p>Cash Given: {item.cashGiven}</p>
-            <p>Profit: {item.profit}</p>
-            <Button onClick={()=>removeItem(index)}>remove</Button>
+          return <Paper key={index} sx={receiptStyle}>
+           {fields.map((it,i) => <p key={i}><span  style={{color:'#948979'}}>{it.key}:      </span>{item[it.label]}</p>)}
+            <Button onClick={()=>deleteD1R(index)}>remove</Button>
           </Paper>
         })}
 
         {/* domid2 receipts */}
         {storedDom2R.map((item,index)=>{
-          return <Paper key={index} >
+          return <Paper key={index}  sx={receiptStyle}>
+            <p><span style={{color:'#948979'}}>Date:</span> {item.date}</p>
+             <p>invoiceNo: {item.invoiceNo}</p>
                 <p>Customer Name: {item.customerName}</p>                                      
                 <p>Total Kg: {item.totalKg}</p>                                      
                 <p>Cost Price: {item.costPrice}</p>                                      
                 <p>End User Price: {item.endUserPrice}</p>                                      
                 <p>profit: {item.profit}</p>     
-                <Button onClick={()=>removeItem(index)}>remove</Button>                                 
+                <Button onClick={()=>deleteD2R(index)}>remove</Button>                                 
           </Paper>
         })}
-          </Box> 
+          </Box> }
         
         {/* cancelled receipts */}
         {show && <Box>
               <Paper  sx={{ padding: '20px', margin: '20px', backgroundColor: 'white', height: '90vh', width:'60vw' }}>
-                  <CanceledR cancelledR={cancelledR} restoreItem={restoreItem} heading={heading}/>
+                  <CanceledR cancelledR={cancelledR} restoreItem={restoreItem} restoreD1Item={restoreD1item} restoreD2Item={restoreD2item} heading={heading} cancelledD1={cancelledD1} cancelledD2={cancelledD2}/>
               </Paper>
         </Box>}
        

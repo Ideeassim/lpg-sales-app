@@ -34,6 +34,8 @@ const[displayComp, setDisplay]= useState('home')
      const [grandTotal, setGrandTotal]= useState(0);
      const [storedReceipts, setStoredReceipts]=useState([]); //accessories receipts
      const [cancelledR, setCancelledR]= useState([]);
+     const [cancelledD1, setCancelledD1]=useState([]);
+     const [cancelledD2, setCancelledD2]=useState([]);
      const [storedDom1R, setStoredDom1R]=useState([]); //domid1 receipts
      const[storedDom2R, setStoredDom2R]=useState([]); //domid2 receipts
      
@@ -155,16 +157,43 @@ const Invoices=['Accessories','Domid Gas I', 'Domid Gas II', 'Cylinder Gas', 'Ta
 
 
 function deleteItem(itemToRemove) {
-  const receiptToCancel = storedReceipts[itemToRemove];
-
-  // Remove it from storedReceipts
+  const receiptToCancel = storedReceipts[itemToRemove]; //for accessories
+  
+    // Remove it from storedReceipts
   setStoredReceipts(prev =>
     prev.filter((_, i) => i !== itemToRemove)
   );
 
   // Add to cancelledR
   setCancelledR(prev =>
-    [...prev, receiptToCancel]);
+    [...prev, receiptToCancel]); 
+   
+}
+
+//remove item in domid1 receipt
+function deleteD1R(index) {
+    const domReceiptCancel = storedDom1R[index]; //for domid1
+
+    
+  setStoredDom1R(prev => {
+    return prev.filter((_,i) => i !==index) //remove item from storedDom1R
+  });
+
+   setCancelledD1(prev =>
+    [...prev, domReceiptCancel]); //add to cancelledR
+
+}
+
+//remove item in domid2 receipt
+function deleteD2R(index) {
+  const dom2ReceiptCancel = storedDom2R[index]; //for domid2
+
+  setStoredDom2R(prev => {
+    return prev.filter((_,i) => i !==index) //remove item from storedDom2R
+  })
+
+     setCancelledD2(prev =>
+    [...prev, dom2ReceiptCancel]); //add to cancelledR
 }
 
 function restoreItem(index) {
@@ -178,24 +207,39 @@ function restoreItem(index) {
     return prev.filter((_,i) => i !==index)})
 }
 
+//restore D1
+function restoreD1Item(index) {
+  const itemToRestore= cancelledD1[index];
+
+  //Add to storedReceipts
+  setStoredDom1R(prev => [...prev, itemToRestore]);
+
+  //remove from CancelledR
+  setCancelledD1(prev =>{ 
+    return prev.filter((_,i) => i !==index)})
+}
+
+//restore D2
+function restoreD2Item(index) {
+  const itemToRestore= cancelledD2[index];
+
+  //Add to storedReceipts
+  setStoredDom2R(prev => [...prev, itemToRestore]);
+
+  //remove from CancelledR
+  setCancelledD2(prev =>{ 
+    return prev.filter((_,i) => i !==index)})
+}
+
 function removeLedgerItem(index) {
   setStoreData(prev => {
     return prev.filter((_,i) => i !==index )
   })
 }
 
-//remove item in domid1 receipt
-function removeItem(index) {
-  setStoredDom1R(prev => {
-    return prev.filter((_,i) => i !==index)
-  })
-}
-//remove item in domid2 receipt
-function removeItem(index) {
-  setStoredDom2R(prev => {
-    return prev.filter((_,i) => i !==index)
-  })
-}
+
+
+
     
 return (
     <div className="min-h-full h-screen w-dvw bg-gray-100 pb-5 ">
@@ -250,7 +294,7 @@ return (
            {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading}/>}
            {displayComp === 'Tank Gas' && <TankGas  heading={heading}/>}
            {displayComp === 'Ledgers' && <Ledger removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} />}
-            {displayComp ==='Receipts' && <StoredReceipts removeItem={removeItem} storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} cancelledR={cancelledR} deleteItem={deleteItem} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts}/>}
+            {displayComp ==='Receipts' && <StoredReceipts storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} restoreD1item={restoreD1Item} restoreD2item={restoreD2Item} cancelledR={cancelledR} cancelledD1={cancelledD1} cancelledD2={cancelledD2} deleteItem={deleteItem} deleteD1R={deleteD1R} deleteD2R={deleteD2R} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts}/>}
         </Box>
     </div>
 );

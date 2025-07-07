@@ -10,14 +10,16 @@ const[d2Input, setD2Input]=useState({
   totalKg:'',
   costPrice:'',
   endUserPrice:'',
-  profit:''
+  profit:'',
+  invoiceNo:'',
+  date:''
 })
 
 //uptake of inputs
   function handleInput(event) {
     const{name, value}=event.target
     setD2Input(prev =>{
-      const saveInput={...prev, [name]: value};
+      const saveInput={...prev, [name]: value, invoiceNo: info.invoiceNo, date: date};
       const costPrice = parseFloat(saveInput.costPrice)|| 0; 
       const endUserPrice = parseFloat(saveInput.endUserPrice)|| 0; 
       if (saveInput.costPrice !=='' && saveInput.endUserPrice !=='') {

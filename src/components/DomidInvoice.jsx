@@ -14,13 +14,15 @@ const DomidInvoice = ({heading, info,date, setStoreData, setInfo, setDisplay,set
     endUserPrice:'',
     purchaseAmount:'',
     cashGiven:'',
-    profit:''
+    profit:'',
+    invoiceNo:'',
+    date:''
   })
 
   function handleInput(event) {
     const{name, value}=event.target;
     setDomidInput(prev =>{
-      const saveInput ={...prev, [name]: value};
+      const saveInput ={...prev, [name]: value, invoiceNo: info.invoiceNo, date: date};
       if (saveInput.totalKg !=='') {
         const totalKg= parseFloat(saveInput.totalKg) || 0;
         saveInput.noOfBots = totalKg/12.5
@@ -53,7 +55,9 @@ const DomidInvoice = ({heading, info,date, setStoreData, setInfo, setDisplay,set
     endUserPrice:'',
     purchaseAmount:'',
     cashGiven:'',
-    profit:''
+    profit:'',
+    invoiceNo:'',
+    date:''
     });
     setDisplay('home')
   }
@@ -69,7 +73,7 @@ const DomidInvoice = ({heading, info,date, setStoreData, setInfo, setDisplay,set
       </Box>
       <Box sx={{display:'flex', gap:'20px', marginTop:'20px'}}>
         <TextField label='Unit Price' name='unitPrice' size='small' variant='outlined' type='number'  onChange={handleInput} value={domidInput.unitPrice}/>
-        <TextField label='End User Price' name='endUserPrice' size='small' type='number' variant='outlined'  onChange={handleInput} value={domidInput.endUserPrice}/>
+        <TextField label='End User Price' name='endUserPrice' size='small' type='number' variant='outlined'  onChange={handleInput} value= {domidInput.endUserPrice}/>
       </Box>
       <Box sx={{display:'flex', gap:'20px', marginTop:'20px'}}>
          <TextField label='Cash Given' name='cashGiven' type='number' size='small' variant='outlined' onChange={handleInput} value={domidInput.cashGiven}/>
