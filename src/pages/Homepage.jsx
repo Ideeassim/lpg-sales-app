@@ -36,8 +36,10 @@ const[displayComp, setDisplay]= useState('home')
      const [cancelledR, setCancelledR]= useState([]);
      const [cancelledD1, setCancelledD1]=useState([]);
      const [cancelledD2, setCancelledD2]=useState([]);
+     const [cancelledCyl, setCancelledCyl]=useState([]);
      const [storedDom1R, setStoredDom1R]=useState([]); //domid1 receipts
      const[storedDom2R, setStoredDom2R]=useState([]); //domid2 receipts
+     const[storedCyl, setStoredCyl]=useState([]); // cylinder receipts
      
      
  const today = new Date();
@@ -123,9 +125,10 @@ const handleClose = (event) => {
     setInfo((prev) =>{ const updatedInfo={...prev, invoiceNo: (Math.floor(Math.random()*1000)), Account:'Domid II'};
       return {...updatedInfo}})
    }else if (item === 'Cylinder Gas invoice'){
-    setDisplay( 'Cylinder Gas')
-   }else if (item === 'Tank Gas invoice') {
-    setDisplay('Tank Gas')
+    setDisplay( 'Cylinder Gas');
+    setInfo((prev) =>{ const updatedInfo={...prev, invoiceNo: (Math.floor(Math.random()*1000)), Account:'Cylinder Gas'};
+      return {...updatedInfo}})
+ 
    }
    else if (Ledgers) { setDisplay('Ledgers')
     
@@ -195,6 +198,19 @@ function deleteD2R(index) {
      setCancelledD2(prev =>
     [...prev, dom2ReceiptCancel]); //add to cancelledR
 }
+//remove item in cylinder receipt
+function deleteCyl(index) {
+  const cylReceiptCancel = storedCyl[index]; //for cylinder
+
+  setStoredCyl(prev => {
+    return prev.filter((_,i) => i !==index) //remove item from cylinder
+  })
+
+     setCancelledCyl(prev =>
+    [...prev, cylReceiptCancel]); //add to cancelledR
+    console.log(cancelledCyl);
+    
+}
 
 function restoreItem(index) {
   const itemToRestore= cancelledR[index];
@@ -228,6 +244,17 @@ function restoreD2Item(index) {
 
   //remove from CancelledR
   setCancelledD2(prev =>{ 
+    return prev.filter((_,i) => i !==index)})
+}
+//restore Cylinder canceled receipt
+function restoreCyItem(index) {
+  const itemToRestore= cancelledCyl[index];
+
+  //Add to storedReceipts
+  setStoredCyl(prev => [...prev, itemToRestore]);
+
+  //remove from CancelledR
+  setCancelledCyl(prev =>{ 
     return prev.filter((_,i) => i !==index)})
 }
 
@@ -288,13 +315,13 @@ return (
             {/* big display */}
         <Box sx={{display:'flex', direction:'column', justifyContent:'center', alignItems:'center', padding:'40px'}}>
            {displayComp === 'home' && <Typography variant='h5'>it all starts here</Typography>}
-           {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}  indexCheck={indexCheck} setStoredReceipts={setStoredReceipts}/>}
+           {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}  indexCheck={indexCheck} setStoredReceipts={setStoredReceipts} />}
            {displayComp === 'Domid Gas I' && <DomidInvoice setStoredDom1R={setStoredDom1R} setDisplay={setDisplay} heading={heading} info={info} setInfo={setInfo} date={formattedDate} setStoreData={setStoreData}/>}
            {displayComp === 'Domid Gas II' && <Domid2Invoice setInfo={setInfo} setStoreData={setStoreData} setDisplay={setDisplay} info={info} setStoredDom2R={setStoredDom2R}  heading={heading} date={formattedDate}/>}
-           {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading}/>}
-           {displayComp === 'Tank Gas' && <TankGas  heading={heading}/>}
+           {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading} info={info} date={formattedDate} setInfo={setInfo} setStoreData={setStoreData} setStoredCyl={setStoredCyl} setDisplay={setDisplay}/>}
+          
            {displayComp === 'Ledgers' && <Ledger removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} />}
-            {displayComp ==='Receipts' && <StoredReceipts storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} restoreD1item={restoreD1Item} restoreD2item={restoreD2Item} cancelledR={cancelledR} cancelledD1={cancelledD1} cancelledD2={cancelledD2} deleteItem={deleteItem} deleteD1R={deleteD1R} deleteD2R={deleteD2R} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts}/>}
+            {displayComp ==='Receipts' && <StoredReceipts storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} restoreD1item={restoreD1Item} restoreD2item={restoreD2Item} cancelledR={cancelledR} cancelledD1={cancelledD1} cancelledD2={cancelledD2} deleteItem={deleteItem} deleteD1R={deleteD1R} deleteD2R={deleteD2R} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts} storedCyl={storedCyl} cancelledCyl={cancelledCyl} restoreCyItem={restoreCyItem} deleteCyl={deleteCyl}  />}
         </Box>
     </div>
 );
