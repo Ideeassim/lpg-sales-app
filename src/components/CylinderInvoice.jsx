@@ -77,9 +77,9 @@ function handleCylSave() {
     <Typography>Gas Difference:{cyInput.gasDiff}</Typography>
     </Box>
     <Box>
-      <TextField size='small' label='Cost Price' name='costPrice' onChange={handleInput}/>
-      <TextField size='small' label='Sales Amount' name='salesAmount' onChange={handleInput}/>
-      <Typography>Profit:{cyInput.profit}</Typography>
+      <TextField size='small' label='Cost Price' name='costPrice' onChange={handleInput} value={Number(cyInput.costPrice).toLocaleString('en-NG')}/>
+      <TextField size='small' label='Sales Amount' name='salesAmount' onChange={handleInput} value={Number(cyInput.salesAmount).toLocaleString('en-NG')}/>
+      <Typography>Profit:{Number(cyInput.profit).toLocaleString('en-NG')}</Typography>
     </Box>
     <Button variant='contained' onClick={handleCylSave}>Save</Button>
     </Paper>

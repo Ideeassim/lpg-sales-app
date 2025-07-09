@@ -52,10 +52,10 @@ const itemBoxStyle = {
             <div key={i}>
                <p>Total Kg: {item.totalKg}</p>
             <p>No of Bottles: {item.noOfBots}</p>
-            <p>Unit Price: {item. unitPrice}</p>
-            <p>End User Price: {item.endUserPrice}</p>
-            <p>Purchase Amount: {item.purchaseAmount}</p>
-            <p>Cash Given: {item.cashGiven}</p>
+            <p>Unit Price: {Number(item. unitPrice).toLocaleString('en-NG')}</p>
+            <p>End User Price: {Number(item.endUserPrice).toLocaleString('en-NG')}</p>
+            <p>Purchase Amount: {Number(item.purchaseAmount).toLocaleString('en-NG')}</p>
+            <p>Cash Given: {Number(item.cashGiven).toLocaleString('en-NG')}</p>
             <p>Profit: {item.profit}</p>                
                           <Button onClick={()=>{restoreD1Item(i)}}>restore</Button>
                     </div></motion.div>))}
@@ -75,9 +75,9 @@ const itemBoxStyle = {
             <div key={i}>
               <p>Customer Name: {item.customerName}</p>                                      
                 <p>Total Kg: {item.totalKg}</p>                                      
-                <p>Cost Price: {item.costPrice}</p>                                      
-                <p>End User Price: {item.endUserPrice}</p>                                      
-                <p>profit: {item.profit}</p>              
+                <p>Cost Price: {Number(item.costPrice).toLocaleString('en-NG')}</p>                                      
+                <p>End User Price: {Number(item.endUserPrice).toLocaleString('en-NG')}</p>                                      
+                <p>profit: {Number(item.profit).toLocaleString('en-NG')}</p>              
                     
                    <Button onClick={()=>{restoreD2Item(i)}}>restore</Button>
                     </div></motion.div>))}
@@ -98,9 +98,9 @@ const itemBoxStyle = {
               <p>Gas Filled: {item.gasFilled}</p>                                      
                 <p>Gas Dispensed: {item.gasDis}</p>                                      
                 <p>Gas Difference: {item.gasDiff}</p>                                      
-                <p>Cost Price: {item.costPrice}</p>                                      
-                <p>Sales Amount: {item.salesAmount}</p>                                      
-                <p>profit: {item.profit}</p>               
+                <p>Cost Price: {Number(item.costPrice).toLocaleString('en-NG')}</p>                                      
+                <p>Sales Amount: {Number(item.salesAmount).toLocaleString('en-NG')}</p>                                      
+                <p>profit: {Number(item.profit).toLocaleString('en-NG')}</p>               
                     
                    <Button onClick={()=>{restoreCyItem(i)}}>restore</Button>
                     </div></motion.div>))}

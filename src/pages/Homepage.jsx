@@ -40,7 +40,7 @@ const[displayComp, setDisplay]= useState('home')
      const [storedDom1R, setStoredDom1R]=useState([]); //domid1 receipts
      const[storedDom2R, setStoredDom2R]=useState([]); //domid2 receipts
      const[storedCyl, setStoredCyl]=useState([]); // cylinder receipts
-     
+     const[accTotal, setAccTotal]=useState([]);
      
  const today = new Date();
 const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
@@ -83,12 +83,13 @@ const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFul
        handleDataSave ()
       
        setStoredReceipts(prev => [...prev, rows]);
-      
+      setAccTotal(prev => [...prev, grandTotal])
      ;
        
       setRows([]);
     } 
-
+    // useEffect(()=> console.log(storedReceipts), [storedReceipts])
+ 
   
     
 
@@ -147,7 +148,7 @@ const heading ={
         textAlign: 'center',
         color: '#2A4759'
     };
-const Invoices=['Accessories','Domid Gas I', 'Domid Gas II', 'Cylinder Gas', 'Tank Gas']
+const Invoices=['Accessories','Domid Gas I', 'Domid Gas II', 'Cylinder Gas']
 
  function indexCheck(indexToRemove) {
 
@@ -292,9 +293,22 @@ return (
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-       
+        slotProps={{
+          list: {
+            'aria-labelledby': 'basic-button',
+            sx: {
+        backgroundColor: '#F6F1E9', // menu background
+        color: '#FFFFFF',           // default text color for menu
+      },
+          },
+        }}
       >
-        {Invoices.map((item, index) => <MenuItem onClick={handleClose} key={index}>{item} invoice</MenuItem>)}
+        {Invoices.map((item, index) => <MenuItem onClick={handleClose} key={index} sx={{
+        color: '#454545', // text color
+        '&:hover': {
+          backgroundColor: '#333333', // hover background
+          color: '#FFF',
+        }}}>{item} invoice</MenuItem>)}
         
               </Menu>
                
@@ -320,7 +334,7 @@ return (
            {displayComp === 'Domid Gas II' && <Domid2Invoice setInfo={setInfo} setStoreData={setStoreData} setDisplay={setDisplay} info={info} setStoredDom2R={setStoredDom2R}  heading={heading} date={formattedDate}/>}
            {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading} info={info} date={formattedDate} setInfo={setInfo} setStoreData={setStoreData} setStoredCyl={setStoredCyl} setDisplay={setDisplay}/>}
           
-           {displayComp === 'Ledgers' && <Ledger removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} />}
+           {displayComp === 'Ledgers' && <Ledger heading={heading} accTotal={accTotal} removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} storedReceipts={storedReceipts}   storedDom1R={storedDom1R} storedDom2R={storedDom2R} storedCyl={storedCyl}/>}
             {displayComp ==='Receipts' && <StoredReceipts storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} restoreD1item={restoreD1Item} restoreD2item={restoreD2Item} cancelledR={cancelledR} cancelledD1={cancelledD1} cancelledD2={cancelledD2} deleteItem={deleteItem} deleteD1R={deleteD1R} deleteD2R={deleteD2R} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts} storedCyl={storedCyl} cancelledCyl={cancelledCyl} restoreCyItem={restoreCyItem} deleteCyl={deleteCyl}  />}
         </Box>
     </div>

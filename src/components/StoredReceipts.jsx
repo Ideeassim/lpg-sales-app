@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Paper, Box,Typography,Button, TextField } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CanceledR from './canceledR';
 
 
@@ -73,7 +74,7 @@ const receiptStyle ={
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
             >
-                  Receipts
+                  Receipts <KeyboardArrowDownIcon/>
             </Button>
 
              <Menu
@@ -85,13 +86,13 @@ const receiptStyle ={
           list: {
             'aria-labelledby': 'basic-button',
             sx: {
-        backgroundColor: '#393E46', // menu background
+        backgroundColor: '#F6F1E9', // menu background
         color: '#FFFFFF',           // default text color for menu
       },
           },
         }}
       >{accounts.map((item, i) => <MenuItem onClick={handleClose}  key={i} sx={{
-        color: '#FF7601', // text color
+         color: '#454545', // text color
         '&:hover': {
           backgroundColor: '#333333', // hover background
           color: '#FFF',
@@ -114,7 +115,7 @@ const receiptStyle ={
                 return <div key={i}>
                   <div>
                      <p>item: {data.item}</p>
-                    <p>price:{data.price}</p>
+                    <p>price: ₦{Number(data.price).toLocaleString('en-NG')}</p>
                     <p>quantity:{data.quantity}</p>
                     <p>invoiceNo: {data.invoiceNo}</p></div>
                 
@@ -144,9 +145,9 @@ const receiptStyle ={
              <p>invoiceNo: {item.invoiceNo}</p>
                 <p>Customer Name: {item.customerName}</p>                                      
                 <p>Total Kg: {item.totalKg}</p>                                      
-                <p>Cost Price: {item.costPrice}</p>                                      
-                <p>End User Price: {item.endUserPrice}</p>                                      
-                <p>profit: {item.profit}</p>     
+                <p>Cost Price: ₦ {Number(item.costPrice).toLocaleString('en-NG')}</p>                                      
+                <p>End User Price: ₦ {Number(item.endUserPrice).toLocaleString('en-NG')}</p>                                      
+                <p>profit: ₦{Number(item.profit).toLocaleString('en-NG')}</p>     
                 <Button onClick={()=>deleteD2R(index)}>remove</Button>                                 
           </Paper>
         })}
@@ -161,9 +162,9 @@ const receiptStyle ={
                 <p>Gas Filled: {item.gasFilled}</p>                                      
                 <p>Gas Dispensed: {item.gasDis}</p>                                      
                 <p>Gas Difference: {item.gasDiff}</p>                                      
-                <p>Cost Price: {item.costPrice}</p>                                      
-                <p>Sales Amount: {item.salesAmount}</p>                                      
-                <p>profit: {item.profit}</p>     
+                <p>Cost Price: ₦ {Number(item.costPrice).toLocaleString('en-NG')}</p>                                      
+                <p>Sales Amount: ₦{Number(item.salesAmount).toLocaleString('en-NG')}</p>                                      
+                <p>profit: ₦{Number(item.profit).toLocaleString('en-NG')}</p>     
                 <Button onClick={()=>deleteCyl(index)}>remove</Button>                                 
           </Paper>
         })}
