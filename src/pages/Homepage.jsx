@@ -12,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 import Receipts from '../components/Receipts';
 import StoredReceipts from '../components/StoredReceipts';
+import Expense from '../components/Expense';
 
 
 
@@ -41,7 +42,8 @@ const[displayComp, setDisplay]= useState('home')
      const[storedDom2R, setStoredDom2R]=useState([]); //domid2 receipts
      const[storedCyl, setStoredCyl]=useState([]); // cylinder receipts
      const[accTotal, setAccTotal]=useState([]);
-     
+     const [expenseData, setExpense]=useState([]);
+
  const today = new Date();
 const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
 
@@ -107,6 +109,8 @@ const handleLedgerClick = (event) => {
     setDisplay('Ledgers')
   }else if(ledger === 'Receipts'){
     setDisplay('Receipts')
+  }else if(ledger === 'Expense'){
+    setDisplay('Expense')
   }
 }
 
@@ -265,8 +269,14 @@ function removeLedgerItem(index) {
   })
 }
 
-
-
+//set each account expense
+const [allExp, setAllExp]=useState({
+    accExp:'',
+    dom1Exp:'',
+    dom2Exp:'',
+    cylExp:''
+  })
+const [allExpArr, setArr]=useState([]);
 
     
 return (
@@ -333,8 +343,8 @@ return (
            {displayComp === 'Domid Gas I' && <DomidInvoice setStoredDom1R={setStoredDom1R} setDisplay={setDisplay} heading={heading} info={info} setInfo={setInfo} date={formattedDate} setStoreData={setStoreData}/>}
            {displayComp === 'Domid Gas II' && <Domid2Invoice setInfo={setInfo} setStoreData={setStoreData} setDisplay={setDisplay} info={info} setStoredDom2R={setStoredDom2R}  heading={heading} date={formattedDate}/>}
            {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading} info={info} date={formattedDate} setInfo={setInfo} setStoreData={setStoreData} setStoredCyl={setStoredCyl} setDisplay={setDisplay}/>}
-          
-           {displayComp === 'Ledgers' && <Ledger heading={heading} accTotal={accTotal} removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} storedReceipts={storedReceipts}   storedDom1R={storedDom1R} storedDom2R={storedDom2R} storedCyl={storedCyl}/>}
+          {displayComp === 'Expense' && <Expense expenseData={expenseData} setExpense={setExpense} allExp={allExp} setArr={setArr}  setAllExp={setAllExp} allExpArr={allExpArr} heading={heading} storeData={storeData} date={formattedDate}/>}
+           {displayComp === 'Ledgers' && <Ledger heading={heading} allExpArr={allExpArr} accTotal={accTotal} removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} storedReceipts={storedReceipts}   storedDom1R={storedDom1R} storedDom2R={storedDom2R} storedCyl={storedCyl}/>}
             {displayComp ==='Receipts' && <StoredReceipts storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} restoreD1item={restoreD1Item} restoreD2item={restoreD2Item} cancelledR={cancelledR} cancelledD1={cancelledD1} cancelledD2={cancelledD2} deleteItem={deleteItem} deleteD1R={deleteD1R} deleteD2R={deleteD2R} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts} storedCyl={storedCyl} cancelledCyl={cancelledCyl} restoreCyItem={restoreCyItem} deleteCyl={deleteCyl}  />}
         </Box>
     </div>

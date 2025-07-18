@@ -73,13 +73,13 @@ const DomidInvoice = ({heading, info,date, setStoreData, setInfo, setDisplay,set
       </Box>
       <Box sx={{display:'flex', gap:'20px', marginTop:'20px'}}>
         <TextField label='Unit Price' name='unitPrice' size='small' variant='outlined' type='number'  onChange={handleInput} value={domidInput.unitPrice}/>
-        <TextField label='End User Price' name='endUserPrice' size='small' type='number' variant='outlined'  onChange={handleInput} value= {Number(domidInput.endUserPrice).toLocaleString('en-NG')}/>
+        <TextField label='End User Price' name='endUserPrice' size='small' type='number' variant='outlined'  onChange={handleInput} value= {(domidInput.endUserPrice)}/>
       </Box>
       <Box sx={{display:'flex', gap:'20px', marginTop:'20px'}}>
-         <TextField label='Cash Given' name='cashGiven' type='number' size='small' variant='outlined' onChange={handleInput} value={Number(domidInput.cashGiven).toLocaleString('en-NG')}/>
-       <TextField label='Purchase Amount' name='purchaseAmount' type='number' size='small' variant='outlined'  onChange={handleInput} value={Number(domidInput.purchaseAmount).toLocaleString('en-NG')}/>
+         <TextField label='Cash Given' name='cashGiven' type='number' size='small' variant='outlined' onChange={handleInput} value={(domidInput.cashGiven)}/>
+       <TextField label='Purchase Amount' name='purchaseAmount' type='number' size='small' variant='outlined'  onChange={handleInput} value={(domidInput.purchaseAmount)}/>
       
-      <TextField  label='Profit' name='profit' value={Number(domidInput.profit).toLocaleString('en-NG')} size='small' variant='outlined' onChange={handleInput} /> </Box>
+      <TextField  label='Profit' name='profit' value={(domidInput.profit)} size='small' variant='outlined' onChange={handleInput} /> </Box>
       <Button variant='contained' onClick={handleDomidSave} sx={{marginTop:'20px'}}>Save</Button>
       </Paper>
   )
