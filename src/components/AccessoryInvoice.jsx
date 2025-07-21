@@ -12,7 +12,7 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Receipts from './Receipts';
 
-const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handleAccSave, date,info,setInfo, indexCheck, setStoredReceipts}) => {
+const InvoiceHeading = ({dbSave, heading, grandTotal, setGrandTotal,rows,setRows, handleAccSave, date,info,setInfo, indexCheck, setStoredReceipts}) => {
     const [accessory, setAccessory] = useState('');
     
   const [input, setInput] = useState({
@@ -20,7 +20,8 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
     quantity: '',
     price: '',
     total: '',
-    invoiceNo: ''// This will be calculated
+    invoiceNo: '',// This will be calculated
+    account:'accessories'
   });
 
  
@@ -57,9 +58,9 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
 
 
     function addItem() {
-      const {item, quantity, price,total, invoiceNo}=input;
+      const {item, quantity, price,total, invoiceNo, account}=input;
       
-      const receiptStore ={item, quantity, price,total, invoiceNo}; //transfer data  from input to receiptStore
+      const receiptStore ={item, quantity, price,total, invoiceNo, account}; //transfer data  from input to receiptStore
 
       //validate fields
       if (!item || !quantity || !price || !total) {
@@ -71,7 +72,7 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
       if(item || quantity || price || total){
                  setRows((prev) =>[...prev, receiptStore]);    
                 
-                 setInfo((prev) =>({...prev, item,quantity,total, invoiceNo}))
+                 setInfo((prev) =>({...prev, item,quantity,total, invoiceNo, account}))
                 // setBtnState(true);
       }
 
@@ -152,7 +153,7 @@ const InvoiceHeading = ({heading, grandTotal, setGrandTotal,rows,setRows, handle
       </Fab>
 
       {/* receipt */}
-      <Receipts rows={rows} indexCheck={indexCheck} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave}/>
+      <Receipts dbSave={dbSave}  rows={rows} indexCheck={indexCheck} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave}/>
     
     </Paper>
   )

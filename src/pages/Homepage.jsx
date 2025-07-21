@@ -9,7 +9,7 @@ import TankGas from '../components/TankGas';
 import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
+import axios from 'axios'
 import Receipts from '../components/Receipts';
 import StoredReceipts from '../components/StoredReceipts';
 import Expense from '../components/Expense';
@@ -79,20 +79,78 @@ const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFul
       
     }
     
-   function handleAccSave() {
-               
-       setDisplay('home')
-       handleDataSave ()
+//  async  function allSave (){
+   
+//         const allReceipts=[
+//       ...storedReceipts.map(r =>({...r, account:'accessories '})),
+//       ...storedDom1R.map(r =>({...r, account:'domid 1'})),
+//       ...storedDom2R.map(r =>({...r, account:'domid 2'})),
+//       ...storedCyl.map(r =>({...r, account:'cylinder gas'})),
+//     ];
+//       // Save to backend
+//        for (let receipt of allReceipts) {
+//     try { 
+//       const res = await axios.post("http://localhost:5000/api/receipts/add", receipt);
+//     console.log("Saved to backend:", res.data);
+//        }
+//         catch (error) {
+//         console.error("Error saving accessory:", error);
+//     alert("Error saving accessory");
+//        }
       
-       setStoredReceipts(prev => [...prev, rows]);
-      setAccTotal(prev => [...prev, grandTotal])
-     ;
-       
-      setRows([]);
+//   }
+//    alert("All receipts saved!");
+//    console.log(allReceipts);
+   
+//  }
+
+
+
+   function handleAccSave() {             
+       setDisplay('home')
+       handleDataSave ()   
+       const newR=[...storedReceipts, ...rows]   
+       setStoredReceipts(newR);
+      setAccTotal(prev => [...prev, grandTotal]);        
+   
+     console.log("Posting this data:", newR);
+      axios.post("http://localhost:5000/api/receipts/add", newR)
+  .then(response => {
+    console.log('Success:', response.data);
+  })
+  .catch(error => {
+    console.error('Error posting data:', error);
+  });
+  setRows([]);
     } 
-    // useEffect(()=> console.log(storedReceipts), [storedReceipts])
+    
+    
+//     async function allSave({ accessories, domid1, domid2, cylinder }) {
+//   const allReceipts = [
+//     ...accessories.map(r => ({ ...r, account: 'accessories' })),
+//     ...domid1.map(r => ({ ...r, account: 'domid 1' })),
+//     ...domid2.map(r => ({ ...r, account: 'domid 2' })),
+//     ...cylinder.map(r => ({ ...r, account: 'cylinder gas' })),
+//   ];
+
+//   for (let receipt of storedReceipts) {
+//     try {
+//       const res = await axios.post("http://localhost:5000/api/receipts/add",{});
+//       console.log("Saved to backend:", res.data);
+//     } catch (error) {
+//       console.error("Error saving receipt:", error);
+//       alert("Error saving receipt");
+//     }
+//   }
+
+//   alert("All receipts saved!");
+//   console.log(allReceipts);
+// }
+
+
+
  
-  
+ 
     
 
 
@@ -164,13 +222,21 @@ const Invoices=['Accessories','Domid Gas I', 'Domid Gas II', 'Cylinder Gas']
 
 
 
-function deleteItem(itemToRemove) {
-  const receiptToCancel = storedReceipts[itemToRemove]; //for accessories
-  
-    // Remove it from storedReceipts
-  setStoredReceipts(prev =>
-    prev.filter((_, i) => i !== itemToRemove)
-  );
+function deleteItem(id) {
+  const receiptToCancel = storedReceipts.find(r => r._id === id); //for accessories
+   console.log("Deleting ID:", id); 
+   axios.delete(`http://localhost:5000/api/receipts/${id}`)
+    .then(response => {
+      console.log(response.data.message);
+
+      // Remove from UI after backend confirms deletion
+      setStoredReceipts(prev => prev.filter(receipt => receipt._id !== id));
+    })
+    .catch(error => {
+      console.error('Error deleting receipt:', error);
+      res.status(500).json({ error: err.message });
+    });
+ 
 
   // Add to cancelledR
   setCancelledR(prev =>
@@ -339,13 +405,13 @@ return (
             {/* big display */}
         <Box sx={{display:'flex', direction:'column', justifyContent:'center', alignItems:'center', padding:'40px'}}>
            {displayComp === 'home' && <Typography variant='h5'>it all starts here</Typography>}
-           {displayComp === 'Accessories' && <AccessoryInvoice handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}  indexCheck={indexCheck} setStoredReceipts={setStoredReceipts} />}
-           {displayComp === 'Domid Gas I' && <DomidInvoice setStoredDom1R={setStoredDom1R} setDisplay={setDisplay} heading={heading} info={info} setInfo={setInfo} date={formattedDate} setStoreData={setStoreData}/>}
-           {displayComp === 'Domid Gas II' && <Domid2Invoice setInfo={setInfo} setStoreData={setStoreData} setDisplay={setDisplay} info={info} setStoredDom2R={setStoredDom2R}  heading={heading} date={formattedDate}/>}
-           {displayComp === 'Cylinder Gas' && <CylinderInvoice  heading={heading} info={info} date={formattedDate} setInfo={setInfo} setStoreData={setStoreData} setStoredCyl={setStoredCyl} setDisplay={setDisplay}/>}
+           {displayComp === 'Accessories' && <AccessoryInvoice  handleDataSave={handleDataSave} setInfo={setInfo} info={info}  heading={heading} rows={rows} setRows={setRows} grandTotal={grandTotal} setGrandTotal={setGrandTotal} handleAccSave={handleAccSave} date={formattedDate}  indexCheck={indexCheck} setStoredReceipts={setStoredReceipts} />}
+           {displayComp === 'Domid Gas I' && <DomidInvoice   setStoredDom1R={setStoredDom1R} setDisplay={setDisplay} heading={heading} info={info} setInfo={setInfo} date={formattedDate} setStoreData={setStoreData}/>}
+           {displayComp === 'Domid Gas II' && <Domid2Invoice   setInfo={setInfo} setStoreData={setStoreData} setDisplay={setDisplay} info={info} setStoredDom2R={setStoredDom2R}  heading={heading} date={formattedDate}/>}
+           {displayComp === 'Cylinder Gas' && <CylinderInvoice    heading={heading} info={info} date={formattedDate} setInfo={setInfo} setStoreData={setStoreData} setStoredCyl={setStoredCyl} setDisplay={setDisplay}/>}
           {displayComp === 'Expense' && <Expense expenseData={expenseData} setExpense={setExpense} allExp={allExp} setArr={setArr}  setAllExp={setAllExp} allExpArr={allExpArr} heading={heading} storeData={storeData} date={formattedDate}/>}
            {displayComp === 'Ledgers' && <Ledger heading={heading} allExpArr={allExpArr} accTotal={accTotal} removeLedgerItem={removeLedgerItem} ledgerTotal={ledgerTotal} info={info} setInfo={setInfo} formattedDate={formattedDate} storeData={storeData} storedReceipts={storedReceipts}   storedDom1R={storedDom1R} storedDom2R={storedDom2R} storedCyl={storedCyl}/>}
-            {displayComp ==='Receipts' && <StoredReceipts storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} restoreD1item={restoreD1Item} restoreD2item={restoreD2Item} cancelledR={cancelledR} cancelledD1={cancelledD1} cancelledD2={cancelledD2} deleteItem={deleteItem} deleteD1R={deleteD1R} deleteD2R={deleteD2R} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts} storedCyl={storedCyl} cancelledCyl={cancelledCyl} restoreCyItem={restoreCyItem} deleteCyl={deleteCyl}  />}
+            {displayComp ==='Receipts' && <StoredReceipts  setStoredReceipts={ setStoredReceipts}  storedDom1R={storedDom1R} storedDom2R={storedDom2R} storeData={storeData} restoreItem={restoreItem} restoreD1item={restoreD1Item} restoreD2item={restoreD2Item} cancelledR={cancelledR} cancelledD1={cancelledD1} cancelledD2={cancelledD2} deleteItem={deleteItem} deleteD1R={deleteD1R} deleteD2R={deleteD2R} heading={heading} grandTotal={grandTotal} handleAccSave={handleAccSave} storedReceipts={storedReceipts} storedCyl={storedCyl} cancelledCyl={cancelledCyl} restoreCyItem={restoreCyItem} deleteCyl={deleteCyl}  />}
         </Box>
     </div>
 );

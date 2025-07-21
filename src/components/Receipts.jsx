@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button } from '@mui/material';
 
-const Receipts = ({rows, indexCheck, heading, grandTotal, handleAccSave}) => {
+const Receipts = ({dbSave, rows, indexCheck, heading, grandTotal, handleAccSave}) => {
  
 
 
@@ -47,7 +47,7 @@ const Receipts = ({rows, indexCheck, heading, grandTotal, handleAccSave}) => {
       <hr className='text-gray-100'/>
       <em className='font-bold'>Grand Total: ₦ {grandTotal}</em>
       <hr  className='text-gray-100'/>
-      <Button variant='contained' onClick={handleAccSave} sx={{margin:'20px'}}>Save</Button>
+      <Button variant='contained' onClick={()=>handleAccSave()} sx={{margin:'20px'}}>Save</Button>
       </Paper>
   )
 }

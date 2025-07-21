@@ -1,17 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Paper, Box,Typography,Button, TextField } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CanceledR from './canceledR';
+import axios from 'axios';
 
 
 
+const StoredReceipts = ({ setStoredReceipts, storedReceipts, heading, deleteItem, cancelledR, cancelledD2,cancelledD1,deleteD1R, deleteD2R, restoreItem, restoreD1item, restoreD2item, storedDom2R  ,storedDom1R, storedCyl, deleteCyl, cancelledCyl, restoreCyItem}) => {
 
-const StoredReceipts = ({storedReceipts, heading, deleteItem, cancelledR, cancelledD2,cancelledD1,deleteD1R, deleteD2R, restoreItem, restoreD1item, restoreD2item, storedDom2R  ,storedDom1R, storedCyl, deleteCyl, cancelledCyl, restoreCyItem}) => {
-console.log(storedCyl);
 
 const[show, setShow]=useState('none');
+
+//fetch receipts
+function getStoredR() {
+ axios.get("http://localhost:5000/api/receipts/all")
+   
+    .then(response => {
+    console.log('Success:', response.data); 
+    setStoredReceipts(response.data);
+  })
+  .catch(error => {
+    console.error('Error posting data:', error);
+  });
+ 
+
+}
 
   // menu
  const [anchorEl, setAnchorEl] = React.useState(null);
@@ -26,7 +41,8 @@ const[show, setShow]=useState('none');
     setAnchorEl(null); 
      const item =event.target.innerText.trim();
 if (item ==='accessories') {
-    setShow('accessories')
+    setShow('accessories'); 
+    getStoredR();
 } else if (item ==='domid I') {
     setShow('domid I')
 }else if (item ==='domid II') {
@@ -109,18 +125,16 @@ const receiptStyle ={
         {/* accessories box */}
        { show == 'accessories' && <Box>
           <hr style={{color:'#DDDDDD'}}/>
-          { storedReceipts.map((eachArray, index)=>{ 
-        return <Paper key={index} sx={receiptStyle}>
-            {eachArray.map((data, i) => {
-                return <div key={i}>
-                  <div>
+          { storedReceipts.map((data, index)=>{ 
+        return <Paper key={data._id} sx={receiptStyle}>           
+                  
                      <p>item: {data.item}</p>
                     <p>price: ₦{Number(data.price).toLocaleString('en-NG')}</p>
                     <p>quantity:{data.quantity}</p>
-                    <p>invoiceNo: {data.invoiceNo}</p></div>
+                    <p>invoiceNo: {data.invoiceNo}</p>
                 
-                        </div>
-            })} <Button onClick={()=>deleteItem(index)}>remove</Button>   
+                       
+          <Button onClick={()=>deleteItem(data._id)}>remove</Button>   
         </Paper>})}
            </Box> }
         
